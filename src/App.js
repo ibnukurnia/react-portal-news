@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Container, FormControl } from "react-bootstrap";
 
-function App() {
+import Articles from "./components/Articles";
+
+const App = () => {
+  const [articles, setArticles] = useState([]);
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    const getData = async () => {
+      const response = await axios(
+        "https://newsapi.org/v2/top-headlines?country=id&apiKey=d22612e9ee684aa3807ab9068737748a"
+      );
+      console.log(response.data.articles);
+      setArticles(response.data.articles);
+    };
+    getData();
+  }, []);
+
+  console.log(search);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="py-5">
+      <Container>
+        <FormControl className="mb-3" onChange={(e) => setSearch(e.target.value)} />
+        <Articles articles={articles} searchKey={search} />
+      </Container>
     </div>
   );
-}
+};
 
 export default App;
